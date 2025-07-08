@@ -20,6 +20,7 @@ def get_url():
     return settings.DATABASE_URL
 
 def run_migrations_offline() -> None:
+    url = get_url()
     context.configure(
         url=url,
         target_metadata=target_metadata,
