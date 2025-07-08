@@ -3,7 +3,7 @@ from typing import Optional
 
 class Settings(BaseSettings):
     # Database
-    DATABASE_URL: str = "postgresql:// user:password@localhost/stoppubmaker"
+    DATABASE_URL: str = "postgresql://postgres:guigui@localhost:5432/stoppubmaker"
 
     # JWT
     SECRET_KEY: str = "your-secret-key"
@@ -21,7 +21,7 @@ class Settings(BaseSettings):
     GOOGLE_CLIENT_SECRET: str = "your-client-secret"
 
     # CORS
-    BACKEND_CORS_ORIGINS: list[str] = ["http://localhost:3000", "http://localhost:5173"]
+    BACKEND_CORS_ORIGINS: list[str] = ["http://localhost:3000", "http://localhost:8000"]
 
     class Config:
         env_file = ".env"

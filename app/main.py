@@ -19,7 +19,7 @@ app.add_middleware(
 
 @app.get("/")
 async def root():
-    return {"message": "StopPubMaker API is runnig!"}
+    return {"message": "StopPubMaker API is runnig!", "status": "ok"}
 
 @app.get("/health")
 async def health_check():
