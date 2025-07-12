@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 
 from app.deps.database import get_db
 from app.crud.crud_template import template
-from app.crud.crud_category import cztegory
+from app.crud.crud_category import category
 from app.schemas.schemas import TemplateCreate, TemplateUpdate, TemplateResponse
 
 router = APIRouter()
@@ -52,7 +52,7 @@ def get_templates_by_category(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Category not found"
         )
-    templates = template.get_templates_by_category(db, category_id=category_id)
+    templates = template.get_by_category(db, category_id=category_id)
     return templates
 
 @router.get("/{template_id}", response_model=TemplateResponse)
@@ -115,5 +115,20 @@ def update_template(
             )
     return template.update(db, db_obj=db_template, obj_in=template_in)
 
-
+@router.delete("/{template_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_template(
+    template_id: int,
+    db: Session = Depends(get_db)
+):
+    """
+    Supprimer un template
+    """
+    db_template = template.get(db, id=template_id)
+    if not db_template:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Template not found"
+        )
+    template.remove(db, id=template_id)
+    return None
 
