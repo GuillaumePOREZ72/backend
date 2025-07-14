@@ -61,4 +61,20 @@ def create_user(
         )
     return user.create(db, obj_in=user_in)
 
+@router.delete("/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_user(
+    user_id: int,
+    db: Session = Depends(get_db)
+):
+    """
+    Supprimer un utilisateur
+    """
+    db_user = user.get(db, id=user_id)
+    if not db_user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found"
+        )
+    user.remove(db, id=user_id)
+
 
