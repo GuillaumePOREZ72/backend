@@ -152,11 +152,23 @@ class Token(BaseModel):
     token_type: str = "bearer"
 
 class TokenData(BaseModel):
-    user_id: Optional[int] = None
+    username: Optional[str] = None
 
-class LoginRequest(BaseModel):
-    email: EmailStr
-    password: str
+class UserLogin(BaseModel):
+    email: str = Field(..., description="Email address")
+    password: str = Field(..., min_length=6, description="Password")
 
-class GoogleOAuthRequest(BaseModel):
-    token: str
+class UserRegister(BaseModel):
+    email: str = Field(..., description="Email address")
+    password: str = Field(..., min_length=6, description="Password")
+    full_name: str = Field(..., min_length=2, max_length=100, description="Full name")
+
+class PasswordReset(BaseModel):
+    email: str = Field(..., description="Email address")
+
+class PasswordResetConfirm(BaseModel):
+    token: str = Field(..., description="Reset token")
+    new_password: str = Field(..., min_length=6, description="New password")
+
+class RefreshToken(BaseModel):
+    refresh_token: str = Field(..., description="Refresh token")
