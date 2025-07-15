@@ -114,3 +114,20 @@ def update_project(
     # connecté est bien le propriétaire du projet
     
     return project.update(db, db_obj=db_project, obj_in=project_in)
+
+@router.delete("/{project_id}", response_model=status.HTTP_204_NO_CONTENT)
+def delete_project(
+    project_id: int,
+    db: Session = Depends(get_db)
+):
+    """
+    Supprimer un projet
+    """
+    db_project = project.get(db, id=project_id)
+    if not db_project:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Project not found"
+        )
+    project.remove(db, id=project_id)
+    return None
