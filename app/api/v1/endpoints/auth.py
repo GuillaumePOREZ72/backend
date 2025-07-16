@@ -19,7 +19,7 @@ from app.schemas.schemas import (
     UserRegister,
     UserResponse,
     Token,
-    RefreshToken,
+    RefreshTokenRequest,
     UserCreate
 )
 
@@ -104,7 +104,7 @@ def login(
 
 @router.post("/refresh", response_model=Token)
 def refresh_token(
-    refresh_data: RefreshToken,
+    refresh_data: RefreshTokenRequest,
     db: Session = Depends(get_db)
 ):
     """
@@ -120,7 +120,7 @@ def refresh_token(
     
     # Extraire l'ID utilisateur
     user_id = payload.get("sub")
-    if user_id is Noe:
+    if user_id is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid refresh token"

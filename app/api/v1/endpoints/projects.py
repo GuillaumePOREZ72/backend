@@ -115,7 +115,7 @@ def update_project(
     
     return project.update(db, db_obj=db_project, obj_in=project_in)
 
-@router.delete("/{project_id}", response_model=status.HTTP_204_NO_CONTENT)
+@router.delete("/{project_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_project(
     project_id: int,
     db: Session = Depends(get_db)

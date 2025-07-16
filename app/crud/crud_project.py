@@ -7,7 +7,7 @@ from app.schemas.schemas import ProjectCreate, ProjectUpdate
 class CRUDProject(CRUDBase[Project, ProjectCreate, ProjectUpdate]):
     def get_by_owner(self, db: Session, *, owner_id: int) -> List[Project]:
         """Récupérer tous les projets d'un utilisateur"""
-    return db.query(Project).filter(Projet.owner_id == owner_id).all()
+        return db.query(Project).filter(Project.owner_id == owner_id).all()
 
     def get_public_projects(self, db: Session, *, skip: int=0, limit: int=0) -> List[Project]:
         """Récupérer tous les projets publics"""

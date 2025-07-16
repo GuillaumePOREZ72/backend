@@ -2,7 +2,7 @@ from typing import List
 from sqlalchemy.orm import Session
 from app.crud.base import CRUDBase
 from app.models.models import Category
-from app.schemas.category import CategoryCreate, CategoryUpdate
+from app.schemas.schemas import CategoryCreate, CategoryUpdate
 
 class CRUDCategory(CRUDBase[Category, CategoryCreate, CategoryUpdate]):
     def get_by_name(self, db: Session, *, name: str) -> Category:

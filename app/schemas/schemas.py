@@ -5,7 +5,7 @@ from typing import Optional, Dict, Any, List
 # === USER SCHEMAS ===
 class UserBase(BaseModel):
     email: EmailStr
-    full_name: str = Field(..., min_length=1, max_length=100)
+    full_name: str = Field(..., min_length=2, max_length=100)
 
 class UserCreate(UserBase):
     password: str = Field(..., min_length=8)
@@ -170,5 +170,5 @@ class PasswordResetConfirm(BaseModel):
     token: str = Field(..., description="Reset token")
     new_password: str = Field(..., min_length=6, description="New password")
 
-class RefreshToken(BaseModel):
+class RefreshTokenRequest(BaseModel):
     refresh_token: str = Field(..., description="Refresh token")

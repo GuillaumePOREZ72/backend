@@ -28,7 +28,7 @@ def get_active_categories(db: Session = Depends(get_db)):
     categories = category.get_active_categories(db)
     return categories
 
-@router.get("/{category_id}", response_model=List[CategoryResponse])
+@router.get("/{category_id}", response_model=CategoryResponse)
 def get_category(category_id: int, db: Session = Depends(get_db)):
     """
     Récupérer une catégorie par son ID
@@ -41,7 +41,7 @@ def get_category(category_id: int, db: Session = Depends(get_db)):
         )
     return db_category
 
-@router.post("/", response_model=CategoryResponse, status_code=HTTP_201_CREATED)
+@router.post("/", response_model=CategoryResponse, status_code=status.HTTP_201_CREATED)
 def create_category(category_in: CategoryCreate, db: Session = Depends(get_db)):
     """
     Créer une nouvelle catégorie
@@ -75,7 +75,8 @@ def update_category(category_id: int, category_in: CategoryUpdate, db: Session =
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Category with this name already exists"
             )
-        return category.update(db, db_obj=db_category, obj_in=category_in)
+            
+    return category.update(db, db_obj=db_category, obj_in=category_in)
 
 @router.delete("/{category_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_category(

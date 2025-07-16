@@ -90,7 +90,7 @@ class SharedProject(Base):
     shared_at = Column(DateTime, default=datetime.utcnow)
     
     project_id = Column(Integer, ForeignKey("projects.id"))
-    shared_with_id = Column(Integer, ForeignKey("users.id"))
+    shared_with_user_id = Column(Integer, ForeignKey("users.id"))
     
     project = relationship("Project", back_populates="shared_projects")
     shared_with = relationship("User", back_populates="shared_projects")
