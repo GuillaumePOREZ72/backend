@@ -148,3 +148,22 @@ def refresh_token(
         refresh_token=refresh_token,
         token_type="bearer"
     )
+
+
+@router.get("/me", response_model=UserResponse)
+def get_current_user_info(
+    current_user: Any = Depends(get_current_active_user)
+):
+    """
+    Récupérer les informations de l'utilisateur connecté
+    """
+    return current_user
+
+@router.post("/logout", status_code=status.HTTP_204_NO_CONTENT)
+def logout(
+    current_user: Any = Depends(get_current_active_user)
+):
+    """
+    Déconnexion (côté client, supprime le token)
+    """
+    return None
