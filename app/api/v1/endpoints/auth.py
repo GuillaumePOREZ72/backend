@@ -28,7 +28,7 @@ router = APIRouter()
 @router.post("/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
 def register(
     user_data: UserRegister,
-    db: Session(get_db)
+    db: Session = Depends(get_db)
 ):
     """
     Inscription d'un nouvel utilisateur
