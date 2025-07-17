@@ -53,6 +53,12 @@ def register(
     )
 
     db_user = user.create(db, obj_in=user_create)
+
+    if not db_user.is_active:
+        db_user.is_active = True
+        db.commit()
+        db.refresh(db_user)
+
     return db_user
 
 
@@ -73,7 +79,7 @@ def login(
         )
 
     # Vérifier le mot de passe
-    if not verify_password(user_credentials.password, db_user.hashed_password):
+    if not verify_password(user_credentials.password, db_user.password_hash):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid credentials"

@@ -8,7 +8,7 @@ class UserBase(BaseModel):
     full_name: str = Field(..., min_length=2, max_length=100)
 
 class UserCreate(UserBase):
-    password: str = Field(..., min_length=8)
+    password_hash: str = Field(..., min_length=8)
 
 class UserUpdate(BaseModel):
     full_name: Optional[str] = Field(None, min_length=1, max_length=100)
