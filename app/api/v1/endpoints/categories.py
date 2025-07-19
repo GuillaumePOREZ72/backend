@@ -3,10 +3,14 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from app.deps.database import get_db
+from app.deps.auth import get_current_active_user
 from app.crud.crud_category import category
 from app.schemas.schemas import CategoryCreate, CategoryUpdate, CategoryResponse
+from app.models.models import User
 
 router = APIRouter()
+
+# ======== ENDPOINTS PUBLICS (pour la landing page) ========
 
 @router.get("/", response_model=List[CategoryResponse])
 def get_categories(
@@ -41,10 +45,16 @@ def get_category(category_id: int, db: Session = Depends(get_db)):
         )
     return db_category
 
+# ======== ENDPOINTS PROTÉGÉS (authentification) ========
+
 @router.post("/", response_model=CategoryResponse, status_code=status.HTTP_201_CREATED)
-def create_category(category_in: CategoryCreate, db: Session = Depends(get_db)):
+def create_category(
+    category_in: CategoryCreate, 
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_active_user)
+):
     """
-    Créer une nouvelle catégorie
+    Créer une nouvelle catégorie (PROTEGE par auth)
     """
     # Vérifier si le nom existe déjà
     existing_category = category.get_by_name(db, name=category_in.name)
@@ -56,7 +66,12 @@ def create_category(category_in: CategoryCreate, db: Session = Depends(get_db)):
     return category.create(db, obj_in=category_in)
 
 @router.put("/{category_id}", response_model=CategoryResponse)
-def update_category(category_id: int, category_in: CategoryUpdate, db: Session = Depends(get_db)):
+def update_category(
+    category_id: int, 
+    category_in: CategoryUpdate, 
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_active_user)
+):
     """
     Mettre à jour une catégorie
     """
@@ -80,7 +95,8 @@ def update_category(category_id: int, category_in: CategoryUpdate, db: Session =
 
 @router.delete("/{category_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_category(
-    category_id: int, db: Session = Depends(get_db)
+    category_id: int, db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_active_user)
 ):
     """
     Supprimer une catégorie

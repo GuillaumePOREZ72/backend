@@ -3,9 +3,11 @@ from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
 
 from app.deps.database import get_db
+from app.deps.auth import get_current_active_user
 from app.crud.crud_template import template
 from app.crud.crud_category import category
 from app.schemas.schemas import TemplateCreate, TemplateUpdate, TemplateResponse
+from app.models.models import User
 
 router = APIRouter()
 
@@ -74,7 +76,8 @@ def get_template_by_id(
 @router.post("/", response_model=TemplateResponse, status_code=status.HTTP_201_CREATED)
 def create_template(
     template_in: TemplateCreate,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_active_user)
 ):
     """
     Créer un nouveau template
@@ -93,7 +96,8 @@ def create_template(
 def update_template(
     template_id: int,
     template_in: TemplateUpdate,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_active_user)
 ):
     """
     Mettre à jour un template
@@ -118,7 +122,8 @@ def update_template(
 @router.delete("/{template_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_template(
     template_id: int,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_active_user)
 ):
     """
     Supprimer un template
