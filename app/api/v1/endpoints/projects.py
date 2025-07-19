@@ -3,9 +3,11 @@ from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
 
 from app.deps.database import get_db
+from app.deps.auth import get_current_active_user
 from app.crud.crud_project import project
 from app.crud.crud_users import user
 from app.schemas.schemas import ProjectCreate, ProjectUpdate, ProjectResponse
+from app.models.models import User
 
 router = APIRouter()
 
@@ -86,19 +88,24 @@ def get_project(
 @router.post("/", response_model=ProjectResponse, status_code=status.HTTP_201_CREATED)
 def create_project(
     project_in: ProjectCreate,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_active_user)
 ):
     """
     Créer un nouveau projet
     """
-    # Plus tard, on ajoutera l'authentification pour définir automatiquement l'owner_id
-    return project.create(db, obj_in=project_in)
+    # Forcer l'owner_id à l'utilisateur connecté (sécurité)
+    project_data = project_in.model_dump()
+    project_data["owner_id"] = current_user.id
+    
+    return project.create(db, obj_in=ProjectCreate(**project_data))
 
 @router.put("/{project_id}", response_model=ProjectResponse)
 def update_project(
     project_id: int,
     project_in: ProjectUpdate,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_active_user)
 ):
     """
     Mettre à jour un projet
@@ -118,7 +125,8 @@ def update_project(
 @router.delete("/{project_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_project(
     project_id: int,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_active_user)
 ):
     """
     Supprimer un projet

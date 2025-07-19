@@ -86,8 +86,8 @@ class ProjectBase(BaseModel):
     width: Optional[float] = Field(None, gt=0) 
     height: Optional[float] = Field(None, gt=0)
 
-class ProjectCreate(ProjectBase): 
-    pass
+class ProjectCreate(ProjectBase):
+    owner_id: int = Field(..., description="ID du propriétaire du projet")
 
 class ProjectUpdate(BaseModel): 
     title: Optional[str] = Field(None, min_length=1, max_length=100)
